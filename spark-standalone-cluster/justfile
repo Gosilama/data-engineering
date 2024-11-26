@@ -11,13 +11,13 @@ down:
    docker-compose down --volumes
 
 run:
-   make down && docker-compose up
+   just down && docker-compose up
 
 run-scaled:
-   make down && docker-compose up --scale spark-worker=3
+   just down && docker-compose up --scale spark-worker=3
 
 run-d:
-   make down && docker-compose up -d
+   just down && docker-compose up -d
 
 stop:
    docker-compose stop
