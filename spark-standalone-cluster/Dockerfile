@@ -1,8 +1,6 @@
-FROM debian as spark-base
+FROM python:3.10-bullseye AS spark-base
 
 RUN apt-get update
-
-RUN apt-get install -y python3
 
 RUN apt-get install -y --no-install-recommends \
     sudo \
@@ -23,11 +21,12 @@ ENV HADOOP_HOME=${HADOOP_HOME:-"/opt/hadoop"}
 RUN mkdir -p ${HADOOP_HOME} && mkdir -p ${SPARK_HOME}
 WORKDIR ${SPARK_HOME}
 
-RUN curl https://dlcdn.apache.org/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.tgz -o spark-3.3.1-bin-hadoop3.tgz \
- && tar xvzf spark-3.3.1-bin-hadoop3.tgz --directory /opt/spark --strip-components 1 \
- && rm -rf spark-3.3.1-bin-hadoop3.tgz
+RUN curl -JLO https://dlcdn.apache.org/spark/spark-3.4.4/spark-3.4.4-bin-hadoop3.tgz
 
-FROM spark-base as pyspark 
+RUN tar xvf spark-3.4.4-bin-hadoop3.tgz --directory /opt/spark --strip-components 1 \
+ && rm -rf spark-3.4.4-bin-hadoop3.tgz
+
+FROM spark-base AS pyspark 
 
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
@@ -47,5 +46,6 @@ RUN chmod u+x /opt/spark/sbin/* && \
 ENV PYTHONPATH=$SPARK_HOME/python/:$PYTHONPATH
 
 COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
