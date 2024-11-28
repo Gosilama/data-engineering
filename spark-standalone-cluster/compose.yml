@@ -1,5 +1,6 @@
 services:
   spark-master:
+    container_name: spark-master
     build: .
     image: spark-image
     entrypoint: ['./entrypoint.sh', 'master']
@@ -10,6 +11,7 @@ services:
       retries: 3
     volumes:
       - spark-logs:/opt/spark/spark-events
+      - ./test:/opt/spark/test
     env_file:
       - .env.spark
     ports:
@@ -39,6 +41,7 @@ services:
       - .env.spark
     volumes:
       - spark-logs:/opt/spark/spark-events
+      - ./test:/opt/spark/test
 
 volumes:
   spark-logs:
