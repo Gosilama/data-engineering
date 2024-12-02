@@ -1,0 +1,20 @@
+down:
+	docker compose -f compose.yml down
+
+start:
+	just stop && docker compose -f compose.yml up
+
+stop:
+	docker compose -f compose.yml stop
+
+run:
+	just stop && docker compose -f compose.yml
+
+build-services:
+	docker compose -f compose.yml build minio-s3 spark-iceberg spark-worker spark-history-server --no-cache
+
+build-all:
+	just down && docker compose -f compose.yml build
+
+clean:
+	docker compose -f compose.yml down --rmi="all" --volumes

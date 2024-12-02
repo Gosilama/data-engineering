@@ -1,8 +1,6 @@
 FROM python:3.10-bullseye AS spark-base
 
-RUN apt-get update
-
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     sudo \
     curl \
     vim \
@@ -26,7 +24,7 @@ RUN curl -JLO https://dlcdn.apache.org/spark/spark-3.4.4/spark-3.4.4-bin-hadoop3
 RUN tar xvf spark-3.4.4-bin-hadoop3.tgz --directory /opt/spark --strip-components 1 \
  && rm -rf spark-3.4.4-bin-hadoop3.tgz
 
-FROM spark-base AS pyspark 
+FROM spark-base AS pyspark
 
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
